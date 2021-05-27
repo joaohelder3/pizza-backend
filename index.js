@@ -41,22 +41,25 @@ const filtroJwt = (req, res, proximo) => {
 }
 
 app.route('/reset').get((req, res) => { 
-    let qry = "DROP TABLE IF EXISTS pedidos;"
-    qry += "CREATE TABLE pedidos ("
+    let qry = "DROP TABLE IF EXISTS clientes;"
+    qry += "CREATE TABLE clientes ("
     qry += "cliente char(100),"
-    qry += "sabor char(50),"
-    qry += "quantidade int,"
-    qry += "tamanho char(25)"
+    qry += "peso int,"
+    qry += "altura int,"
+    qry += "idade int,"
+    qry += "tmb int,"
+    qry += "imc int"
     qry += ");"
     qry += "DROP TABLE IF EXISTS usuarios;"
     qry += "CREATE TABLE usuarios ("
     qry += "usuario varchar(50),"
+    qry += "email varchar(255),"
     qry += "senha varchar(255),"
     qry += "perfil varchar(25),"
     qry += "nome varchar(100)"
     qry += ");"
-    qry += "INSERT INTO usuarios (usuario, senha, perfil, nome) "
-    qry += "VALUES ('admin', '123456', 'ADMIN', 'Antonio Rodrigues');";
+    qry += "INSERT INTO usuarios (usuario, email, senha, perfil, nome) "
+    qry += "VALUES ('admin', 'antonio@fecaf.com', '123456', 'ADMIN', 'Antonio Rodrigues');";
     console.log(qry);
     pool.query(qry, (err, dbres) => {
         if (err) { 
@@ -67,9 +70,9 @@ app.route('/reset').get((req, res) => {
     })
 })
 
-app.route('/pedidos').get(filtroJwt, (req, res) => {
-    console.log("/pedidos acionado")
-    let qry = "SELECT * FROM pedidos;"
+app.route('/clientes').get(filtroJwt, (req, res) => {
+    console.log("/clientes acionado")
+    let qry = "SELECT * FROM clientes;"
     pool.query(qry, (err, dbres) => { 
         if(err) { 
             res.status(500).send(err)
@@ -79,15 +82,28 @@ app.route('/pedidos').get(filtroJwt, (req, res) => {
     });
 })
 
-app.route('/pedido/adicionar').post(filtroJwt, (req, res) => { 
-    console.log("/pedido/adicionar acionado")
-    let qry = "INSERT INTO pedidos (cliente, sabor, quantidade, tamanho) "
-    qry += ` VALUES ('${req.body.cliente}', '${req.body.sabor}', ${req.body.quantidade}, '${req.body.tamanho}');`
+app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
+    console.log("/cliente/adicionar acionado")
+    let qry = "INSERT INTO clientes (cliente, peso, altura, idade, tmb, imc) "
+    qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
     pool.query(qry, (err, dbres) => { 
         if (err) { 
             res.status(500).send(err)
         } else { 
-            res.status(200).send("Pedido adicionado com sucesso")
+            res.status(200).send("Cliente adicionado com sucesso")
+        }
+    });
+})
+
+app.route('/cadastro/adicionar').post((req, res) => {
+    console.log("/cadastro/adicionar acionado")
+    let qry = "INSERT INTO usuarios (usuario, email, senha, perfil, nome) "
+    qry += `VALUES ('${req.body.usuario}', '${req.body.email}', '${req.body.senha}', 'usuario', '${req.body.nome}');`
+    pool.query(qry, (err, dbres) => {
+        if (err) {
+            res.status(500).send(err)
+        } else {
+            res.status(200).send("Usuario adicionado com sucesso")
         }
     });
 })
@@ -118,7 +134,7 @@ app.route('/login').post((req, res) => {
                 const token = jwt.sign(payload, secret);
                 const nome = payload.nome;
                 console.log("Token => ", token);
-                const objToken = {token, nome};
+                const objToken = {token};
                 res.status(200).json(objToken);
             } else { 
                 res.status(401).send("Usuário ou senha inválidos");
