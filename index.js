@@ -132,7 +132,6 @@ app.route('/login').post((req, res) => {
                     nome: row.nome,
                 }
                 const token = jwt.sign(payload, secret);
-                const nome = payload.nome;
                 console.log("Token => ", token);
                 const objToken = {token};
                 res.status(200).json(objToken);
