@@ -4,9 +4,9 @@ const pg = require('pg')
 const jwt = require('jsonwebtoken');
 const port = process.env.PORT || config.get("server.port")
 const uri = process.env.DATABASE_URL || config.get("db.uri");
-const secret = process.env.JWT_SECRET || config.get("jwt.secret");
+//const secret = process.env.JWT_SECRET || config.get("jwt.secret");
 
-console.log("SECRET==>", secret);
+//console.log("SECRET==>", secret);
 
 const app = express()
 app.use(express.json())
@@ -87,7 +87,8 @@ app.route('/clientes').get((req, res) => {
 app.route('/cliente/adicionar').post((req, res) => { 
     console.log("/cliente/adicionar acionado")
     let qry = "INSERT INTO clientes (cliente, peso, altura, idade, tmb, imc) "
-    qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
+    //qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
+    qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '0', '0');`
     pool.query(qry, (err, dbres) => { 
         if (err) { 
             res.status(500).send(err)
