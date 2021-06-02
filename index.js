@@ -70,7 +70,8 @@ app.route('/reset').get((req, res) => {
     })
 })
 
-app.route('/clientes').get(filtroJwt, (req, res) => {
+//app.route('/clientes').get(filtroJwt, (req, res) => {
+app.route('/clientes').get((req, res) => {
     console.log("/clientes acionado")
     let qry = "SELECT * FROM clientes;"
     pool.query(qry, (err, dbres) => { 
@@ -82,7 +83,8 @@ app.route('/clientes').get(filtroJwt, (req, res) => {
     });
 })
 
-app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
+//app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
+app.route('/cliente/adicionar').post((req, res) => { 
     console.log("/cliente/adicionar acionado")
     let qry = "INSERT INTO clientes (cliente, peso, altura, idade, tmb, imc) "
     qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
