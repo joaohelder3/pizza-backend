@@ -21,7 +21,7 @@ const pool = new pg.Pool ({
 })
 
 
-const filtroJwt = (req, res, proximo) => { 
+/*const filtroJwt = (req, res, proximo) => { 
     console.log("Headers ==>", req.headers);
     // console.log(`Autorization ==> ${req.headers.authorization.substring(0, 6)}`);
     if (req.headers.authorization 
@@ -38,7 +38,7 @@ const filtroJwt = (req, res, proximo) => {
     } else { 
         res.status(403).send("É necessário um token para acessar este recurso")
     }
-}
+}*/
 
 app.route('/reset').get((req, res) => { 
     let qry = "DROP TABLE IF EXISTS clientes;"
