@@ -4,9 +4,9 @@ const pg = require('pg')
 const jwt = require('jsonwebtoken');
 const port = process.env.PORT || config.get("server.port")
 const uri = process.env.DATABASE_URL || config.get("db.uri");
-//const secret = process.env.JWT_SECRET || config.get("jwt.secret");
+const secret = process.env.JWT_SECRET || config.get("jwt.secret");
 
-//console.log("SECRET==>", secret);
+console.log("SECRET==>", secret);
 
 const app = express()
 app.use(express.json())
@@ -21,7 +21,7 @@ const pool = new pg.Pool ({
 })
 
 
-/*const filtroJwt = (req, res, proximo) => { 
+const filtroJwt = (req, res, proximo) => { 
     console.log("Headers ==>", req.headers);
     // console.log(`Autorization ==> ${req.headers.authorization.substring(0, 6)}`);
     if (req.headers.authorization 
@@ -38,7 +38,7 @@ const pool = new pg.Pool ({
     } else { 
         res.status(403).send("É necessário um token para acessar este recurso")
     }
-}*/
+}
 
 app.route('/reset').get((req, res) => { 
     let qry = "DROP TABLE IF EXISTS clientes;"
@@ -70,8 +70,7 @@ app.route('/reset').get((req, res) => {
     })
 })
 
-//app.route('/clientes').get(filtroJwt, (req, res) => {
-app.route('/clientes').get((req, res) => {
+app.route('/clientes').get(filtroJwt, (req, res) => {
     console.log("/clientes acionado")
     let qry = "SELECT * FROM clientes;"
     pool.query(qry, (err, dbres) => { 
@@ -83,8 +82,7 @@ app.route('/clientes').get((req, res) => {
     });
 })
 
-//app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
-app.route('/cliente/adicionar').post((req, res) => { 
+app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
     console.log("/cliente/adicionar acionado")
     let qry = "INSERT INTO clientes (cliente, peso, altura, idade, tmb, imc) "
     //qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
@@ -94,19 +92,6 @@ app.route('/cliente/adicionar').post((req, res) => {
             res.status(500).send(err)
         } else { 
             res.status(200).send("Cliente adicionado com sucesso")
-        }
-    });
-})
-
-app.route('/cadastro/adicionar').post((req, res) => {
-    console.log("/cadastro/adicionar acionado")
-    let qry = "INSERT INTO usuarios (usuario, email, senha, perfil, nome) "
-    qry += `VALUES ('${req.body.usuario}', '${req.body.email}', '${req.body.senha}', 'usuario', '${req.body.nome}');`
-    pool.query(qry, (err, dbres) => {
-        if (err) {
-            res.status(500).send(err)
-        } else {
-            res.status(200).send("Usuario adicionado com sucesso")
         }
     });
 })
