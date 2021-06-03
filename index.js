@@ -50,6 +50,18 @@ app.route('/reset').get((req, res) => {
     qry += "tmb decimal,"
     qry += "imc decimal"
     qry += ");"
+    qry += "DROP TABLE IF EXISTS equipamentos;"
+    qry += "CREATE TABLE equipamentos ("
+    qry += "nome varchar(255),"
+    qry += "tipo varchar(255),"
+    qry += "quantidade int"
+    qry += ");"
+    qry += "DROP TABLE IF EXISTS academias;"
+    qry += "CREATE TABLE academias ("
+    qry += "nome varchar(255),"
+    qry += "bairro varchar(255),"
+    qry += "logradouro varchar(255)"
+    qry += ");"
     qry += "DROP TABLE IF EXISTS usuarios;"
     qry += "CREATE TABLE usuarios ("
     qry += "usuario varchar(50),"
@@ -92,6 +104,56 @@ app.route('/cliente/adicionar').post(filtroJwt, (req, res) => {
             res.status(500).send(err)
         } else { 
             res.status(200).send("Cliente adicionado com sucesso")
+        }
+    });
+})
+
+app.route('/equipamentos').get(filtroJwt, (req, res) => {
+    console.log("/equipamentos acionado")
+    let qry = "SELECT * FROM equipamentos;"
+    pool.query(qry, (err, dbres) => { 
+        if(err) { 
+            res.status(500).send(err)
+        } else { 
+            res.status(200).json(dbres.rows)
+        }
+    });
+})
+
+app.route('/equipamento/adicionar').post(filtroJwt, (req, res) => { 
+    console.log("/equipamento/adicionar acionado")
+    let qry = "INSERT INTO equipamentos (nome, tipo, quantidade) "
+    qry += ` VALUES ('${req.body.nome}', '${req.body.tipo}', '${req.body.quantidade}');`
+    pool.query(qry, (err, dbres) => { 
+        if (err) { 
+            res.status(500).send(err)
+        } else { 
+            res.status(200).send("Equipamento adicionado com sucesso")
+        }
+    });
+})
+
+app.route('/academias').get(filtroJwt, (req, res) => {
+    console.log("/academias acionado")
+    let qry = "SELECT * FROM academias;"
+    pool.query(qry, (err, dbres) => { 
+        if(err) { 
+            res.status(500).send(err)
+        } else { 
+            res.status(200).json(dbres.rows)
+        }
+    });
+})
+
+app.route('/academia/adicionar').post(filtroJwt, (req, res) => { 
+    console.log("/academia/adicionar acionado")
+    let qry = "INSERT INTO academias (nome, bairro, logradouro) "
+    qry += ` VALUES ('${req.body.nome}', '${req.body.bairro}', '${req.body.logradouro});`
+    pool.query(qry, (err, dbres) => { 
+        if (err) { 
+            res.status(500).send(err)
+        } else { 
+            res.status(200).send("Academia adicionada com sucesso")
         }
     });
 })
