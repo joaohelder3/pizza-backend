@@ -97,8 +97,8 @@ app.route('/clientes').get(filtroJwt, (req, res) => {
 app.route('/cliente/adicionar').post(filtroJwt, (req, res) => { 
     console.log("/cliente/adicionar acionado")
     let qry = "INSERT INTO clientes (cliente, peso, altura, idade, tmb, imc) "
-    //qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
-    qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '0', '0');`
+    qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '${req.body.tmb}', '${req.body.imc}');`
+    //qry += ` VALUES ('${req.body.cliente}', '${req.body.peso}', '${req.body.altura}', '${req.body.idade}', '0', '0');`
     pool.query(qry, (err, dbres) => { 
         if (err) { 
             res.status(500).send(err)
