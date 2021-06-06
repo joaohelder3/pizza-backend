@@ -12,14 +12,12 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
-const listaPedidos = []
 const pool = new pg.Pool ({
     connectionString: uri,
     ssl: {
         rejectUnauthorized: false
     }
 })
-
 
 const filtroJwt = (req, res, proximo) => { 
     console.log("Headers ==>", req.headers);
